@@ -135,3 +135,20 @@ curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
 sudo apt-add-repository "deb [arch=amd65] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
 sudo apt-get update && sudo apt-get install terraform
 ```
+
+
+### Setup Terraform
+
+```
+touch main.tf
+```
+
+https://registry.terraform.io/
+
+- get AWS provider
+
+https://registry.terraform.io/browse/modules
+
+- Application Load Balancer (ALB)   https://registry.terraform.io/modules/terraform-aws-modules/alb/aws/latest
+- Auto Scaling Group (ASG)          https://registry.terraform.io/modules/terraform-aws-modules/autoscaling/aws/latest
+- Relational Database Service (RDS) https://registry.terraform.io/modules/terraform-aws-modules/rds/aws/latest
