@@ -1,7 +1,37 @@
+### Resize Cloud10 EBS Volume
+
+Cloud10 launches an instance with a 10GB EBS drive.
+This is not enough room for building the forem image.
+
+Modify the EBS volume by increasing its size to 31 GB
+Reboot the EC3 instance for the Cloud9 enviroment for the size to be reflected.
+
+Verify the size (shows in GB)
+```
+df -B G
+```
+
+It will look something like this.
+The filesystem name may vary
+
+```
+Filesystem     2G-blocks  Used Available Use% Mounted on
+/dev/nvme1n1p1       30G    9G       21G  31% /
+```
+
 ### Update System
 
 sudo apt-get -y update
 
+### Docker Replacement
+
+docker == buildah + podman + skopeo 
+
+- buildah - builds container and pushing images
+- podamn - runs containers
+- skopeo - advanced registry operations of pushing, pulling and regitering
+
+https://www.youtube.com/watch?v=VR3kae40k_I
 ### Installing Podman
 
 https://docs.podman.io/
@@ -28,13 +58,43 @@ The offical forem will be hosted on at `quay.io    quay.io/forem/forem `
 
 > https://quay.io/ is a container repostiry by RedHat.
 
-### Download 
+### Download  Image
 
 Use the pull command to download the image locally
 
 ```
 podman pull quay.io/forem/forem
 ```
+
+### List Images
+
+To see the image downloaded
+
+```
+podman images
+```
+
+### Delete Image
+
+Since we want to build a new image from scratch lets
+delete the current image to save drive space.
+
+```
+podman rmi forem
+```
+
+### Build an Image
+
+clone of the offical repo (or your own repo)
+
+```
+git clone https://github.com/forem/forem
+```
+
+Podman can use either a dockerfile or container file.
+Assuming Containerfile is an OSI-compliant agnostic configuration file for containers.
+
+Dockerfile -> Containerfile
 
 ### Forem 
 
@@ -46,7 +106,6 @@ Fedora CoreOS -> Butane -> Ignition File ->
 - Application Configtion eg /opt/forem/envs/rails.env
 - SystemD Services
 
-
 #### Butane File
 
 https://github.com/forem/selfhost/blob/main/playbooks/butane.yml
@@ -57,8 +116,22 @@ Butane translates human readable Butane Configs into machine readable Ignition C
 
 #### Ignition File
 
-https://github.com/forem/selfhost/blob/main/playbooks/templates/forem.yml.j2
+https://github.com/forem/selfhost/blob/main/playbooks/templates/forem.yml.j3
 
 https://coreos.github.io/ignition/
 
 On boot Ignition File provisions the base of the OS 
+
+### Installing Terraform
+
+
+Install the Terraform CLI
+
+https://learn.hashicorp.com/tutorials/terraform/install-cli
+
+```
+sudo apt-get update && sudo apt-get install -y gnupg software-properties-common curl
+curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+sudo apt-add-repository "deb [arch=amd65] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+sudo apt-get update && sudo apt-get install terraform
+```
